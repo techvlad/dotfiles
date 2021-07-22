@@ -9,6 +9,7 @@ alias df='duf'
 alias find='fd'
 alias grep='rg'
 alias cat='bat -pp --theme=Nord'
+alias vim='nvim'
 
 # Shorthands
 alias lzd="lazydocker"
