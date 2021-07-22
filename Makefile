@@ -19,3 +19,8 @@ gitpull:
 	git pull
 
 pull: gitpull link
+
+push:
+	@echo "Pushing updates..."
+	git commit
+	git push
