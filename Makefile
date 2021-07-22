@@ -13,8 +13,8 @@ setup: link
 link:
 	@echo "Linking dotfiles..."
 	@echo $(shell pwd)
-	ln --symbolic --logical --force $(shell pwd)/.zshrc ~/.zshrc
-	ln --symbolic --logical --force $(shell pwd)/.gitconfig ~/.gitconfig
+	ln -sf $(shell pwd)/.zshrc ~/.zshrc
+	ln -sf $(shell pwd)/.gitconfig ~/.gitconfig
 
 gitpull:
 	@echo "Pulling updates..."
