@@ -26,3 +26,6 @@ upgrade_system ()
 		brew update && brew upgrade
 	fi
 }
+
+# Alias for Dotfiles CLI
+alias dotfiles='make -C ~/dotfiles'
