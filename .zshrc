@@ -8,7 +8,7 @@ alias du='dust'
 alias df='duf'
 alias find='fd'
 alias grep='rg'
-alias cat='bat -pp --theme=Nord'
+alias cat='bat -pp'
 alias vim='nvim'
 
 # Shorthands
