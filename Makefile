@@ -6,6 +6,7 @@ default:
 	@echo "make setup	# First initialization"
 	@echo "make link	# Link dotfiles"
 	@echo "make pull	# Retrive latest dotfiles (pull from repository)"
+	@echo "make push	# Persist local changes (push to repository)"
 
 setup: link
 
