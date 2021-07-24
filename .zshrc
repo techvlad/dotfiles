@@ -21,7 +21,7 @@ alias reload_config="source ~/.zshrc"
 upgrade_system ()
 {
 	if [[ "$(uname)" == "Linux" ]]; then
-		yay -Syu --nocleanmenu --nodiffmenu
+		yay -Syu --nocleanmenu --nodiffmenu --noconfirm
 	else
 		brew update && brew upgrade
 	fi
