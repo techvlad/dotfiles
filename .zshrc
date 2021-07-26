@@ -12,10 +12,16 @@ alias cat='bat -pp'
 alias vim='nvim'
 
 # Shorthands
-alias lzd="lazydocker"
+alias lzd='lazydocker'
 
 # Easiest way to reload zsh config
-alias reload_config="source ~/.zshrc"
+alias reload_config='source ~/.zshrc'
+
+# Pretty JSON
+prettyjson () { cat | jq -Rr '. as $line | fromjson? // $line' }
+
+# Make port free
+killport () { lsof -ti:"$1" | xargs kill -9 }
 
 # Upgrade Linux or MacOS
 upgrade_system ()
