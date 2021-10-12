@@ -15,6 +15,7 @@ link:
 	@echo $(shell pwd)
 	ln -sf $(shell pwd)/.zshrc ~/.zshrc
 	ln -sf $(shell pwd)/.gitconfig ~/.gitconfig
+	ln -sf $(shell pwd)/init.vim ~/.config/nvim/init.vim
 
 gitpull:
 	@echo "Pulling updates..."
