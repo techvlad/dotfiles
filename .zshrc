@@ -24,6 +24,9 @@ alias reload_config='source ~/.zshrc'
 # Pretty JSON
 prettyjson () { cat | jq -Rr '. as $line | fromjson? // $line' }
 
+# Get my global ip
+alias myglobalip="curl http://ipecho.net/plain; echo"
+
 # Make port free
 killport () { lsof -ti:"$1" | xargs kill -9 }
 
