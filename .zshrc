@@ -11,7 +11,7 @@ alias grep='rg'
 alias cat='bat -pp --theme=base16'
 alias vim='nvim'
 
-# Search command 
+# Search command
 alias search="FZF_DEFAULT_COMMAND='fd --type f' fzf --preview 'bat --theme=base16 --style=numbers --color=always --line-range :500 {}'"
 
 # Shorthands
@@ -36,7 +36,7 @@ upgrade_system ()
 	if [[ "$(uname)" == "Linux" ]]; then
 		yay -Syu --nocleanmenu --nodiffmenu --noconfirm
 	else
-		brew update && brew upgrade
+		brew update && brew upgrade --greed
 	fi
 }
 
