@@ -16,6 +16,7 @@ link:
 	ln -sf $(shell pwd)/.zshrc ~/.zshrc
 	ln -sf $(shell pwd)/.gitconfig ~/.gitconfig
 	ln -sf $(shell pwd)/init.vim ~/.config/nvim/init.vim
+	ln -sf $(shell pwd)/starship.toml ~/.config/starship.toml
 
 gitpull:
 	@echo "Pulling updates..."
