@@ -3,8 +3,11 @@ call plug#begin("~/.vim/plugged")
 
 Plug 'joshdick/onedark.vim' " Color schema
 Plug 'vim-airline/vim-airline' " Fancy airlines
+Plug 'vim-airline/vim-airline-themes'
 Plug 'ntpeters/vim-better-whitespace' " Whitespace hightlight
 Plug 'nathanaelkane/vim-indent-guides' " Indent level
+Plug 'chriskempson/base16-vim'
+Plug 'cespare/vim-toml', { 'branch': 'main' }
 
 call plug#end()
 
@@ -15,7 +18,7 @@ set number
 if (has("termguicolors"))
     set termguicolors
 endif
-colorscheme onedark
+colorscheme base16-tomorrow-night
 
 """ Personal settings
 set number " Enable line numbers
@@ -31,7 +34,7 @@ set magic " Enable RegExp in search pattern
 set fileencodings=utf-8,cp1251,koi8-r,cp866 " Default file encodings
 set cursorline " Enable cursorline
 set listchars=space:·,tab:│\ ,eol:¬ " Invisible chars
-set list " Show invisible chars
+set nolist " Do not show invisible chars
 set clipboard=unnamedplus " Use system clipboard by default
 " Enable automatic indentation
 set smarttab
