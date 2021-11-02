@@ -11,9 +11,6 @@ alias grep='rg'
 alias cat='bat -pp --theme=base16'
 alias vim='nvim'
 
-# Search command
-alias search="FZF_DEFAULT_COMMAND='fd --type f' fzf --preview 'bat --theme=base16 --style=numbers --color=always --line-range :500 {}'"
-
 # Shorthands
 alias lzd='lazydocker'
 alias lzg='lazygit'
