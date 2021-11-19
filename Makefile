@@ -10,7 +10,12 @@ default:
 
 setup: link
 
-link:
+create_folders:
+	@echo "Create missed folders..."
+	mkdir -p ~/.config
+	mkdir -p ~/.config/nvim
+
+link: create_folders
 	@echo "Linking dotfiles..."
 	@echo $(shell pwd)
 	ln -sf $(shell pwd)/.zshrc ~/.zshrc
