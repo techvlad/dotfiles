@@ -14,6 +14,8 @@ create_folders:
 	@echo "Create missed folders..."
 	mkdir -p ~/.config
 	mkdir -p ~/.config/nvim
+	mkdir -p ~/Sandbox
+	mkdir -p ~/Projects
 
 link: create_folders
 	@echo "Linking dotfiles..."
