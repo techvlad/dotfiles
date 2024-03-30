@@ -1,20 +1,10 @@
-[init]
-	defaultBranch = main
+[init] defaultBranch = main
+
 [core]
 	editor = nvim
-[pager]
-	diff = delta
-	log = delta
-	reflog = delta
-	show = delta
 
-[delta]
-	syntax-theme = base16
-	line-numbers = true
-	navigate = true
-
-[interactive]
-	diffFilter = delta --color-only
 [rerere]
 	enabled = true
 	autoUpdate = true
+[push]
+  autoSetupRemote = true
