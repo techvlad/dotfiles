@@ -26,7 +26,7 @@ formulaes=(
   "lazydocker"
   "lazygit"
   "mas"
-  "neofetch"
+  "fastfetch"
   "neovim"
   "ripgrep"
 )
@@ -56,7 +56,6 @@ casks=(
   "orion"
   "postman"
   "qbittorrent"
-  "qmk-toolbox"
   "raspberry-pi-imager"
   "raycast"
   "shottr"

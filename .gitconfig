@@ -7,4 +7,4 @@
 	enabled = true
 	autoUpdate = true
 [push]
-  autoSetupRemote = true
+	autoSetupRemote = true
