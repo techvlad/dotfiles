@@ -4,6 +4,10 @@ vim.g.maplocalleader = " "
 
 vim.g.have_nerd_font = true
 
+-- disable netrw (replaced by plugin)
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
+
 vim.opt.number = true
 vim.opt.showmatch = true
 vim.opt.mouse = "a"
@@ -19,10 +23,10 @@ vim.opt.hlsearch = true
 
 -- basic mapping
 -- navigation between windows
-vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window", silent = true })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window", silent = true })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window", silent = true })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window", silent = true })
 
 -- better way to exit from terminal
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
@@ -111,12 +115,12 @@ require("lazy").setup({
 		event = "VeryLazy",
 		opts = {
 			disable_netrw = true,
-			filters = {
-				-- dotfiles = true,
-			},
 			renderer = {
+        highlight_git = 'icon',
+        -- highlight_opened_files = 'icon',
 				icons = {
 					show = {
+            git = false,
 						folder_arrow = false,
 					},
 				},
