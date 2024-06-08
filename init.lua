@@ -21,6 +21,9 @@ vim.opt.signcolumn = "yes" -- keep signcolumn on by default
 vim.opt.inccommand = "split" -- preview substitutions live, as you type
 vim.opt.hlsearch = true
 
+vim.opt.splitright = true -- split vertical window to the right
+vim.opt.splitbelow = true -- split horizontal window to the bottom
+
 -- basic mapping
 -- navigation between windows
 vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window", silent = true })
@@ -48,32 +51,47 @@ vim.opt.rtp:prepend(lazypath)
 -- load plugins
 require("lazy").setup({
 
-	{ -- syntax highlight
+	{ -- Syntax highlight
 		"nvim-treesitter/nvim-treesitter",
 		build = ":TSUpdate",
-		opts = {
-			ensure_installed = {
-				"c",
-				"lua",
-				"vim",
-				"vimdoc",
-				"bash",
-				"dockerfile",
-				"yaml",
-				"rust",
-				"html",
-				"css",
-				"javascript",
-				"typescript",
-				"svelte",
-			},
-			sync_install = false,
-			highlight = { enable = true },
-			indent = { enable = true },
-		},
+		config = function()
+			-- HACK: Important to install via git, regular versions are outdated
+			require("nvim-treesitter.install").prefer_git = true
+			require("nvim-treesitter.configs").setup({
+				ensure_installed = {
+					"bash",
+					"c",
+					"css",
+					"csv",
+					"diff",
+					"dockerfile",
+					"go",
+					"html",
+					"javascript",
+					"jsdoc",
+					"json",
+					"lua",
+					"markdown",
+					"markdown_inline",
+					"python",
+					"rust",
+					"sql",
+					"svelte",
+					"toml",
+					"tsx",
+					"typescript",
+					"vim",
+					"vimdoc",
+					"yaml",
+				},
+				sync_install = false,
+				highlight = { enable = true },
+				indent = { enable = true },
+			})
+		end,
 	},
 
-	{ -- collection of colorschemes
+	{ -- Collection of colorschemes
 		"RRethy/base16-nvim",
 		config = function()
 			require("base16-colorscheme").setup({
@@ -97,24 +115,36 @@ require("lazy").setup({
 		end,
 	},
 
-	{ -- rainbow brackets
+	{
+		-- Highlight #rgba colors
+		"NvChad/nvim-colorizer.lua",
+		opts = {},
+	},
+
+	{ -- Rainbow brackets
 		"HiPhish/rainbow-delimiters.nvim",
 	},
 
 	{
-		-- highlight todo, notes, etc in comments
+		-- Highlight todo, notes, etc in comments
 		"folke/todo-comments.nvim",
 		event = "VimEnter",
 		dependencies = { "nvim-lua/plenary.nvim" },
 		opts = { signs = false },
 	},
 
-	{
+	{ -- Buffer git integration
 		"lewis6991/gitsigns.nvim",
 		opts = {},
 	},
 
-	{ -- file explorer
+	{ -- Comments engine
+		"numToStr/Comment.nvim",
+		opts = {},
+		lazy = false,
+	},
+
+	{ -- File explorer
 		"nvim-tree/nvim-tree.lua",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		event = "VeryLazy",
@@ -162,13 +192,15 @@ require("lazy").setup({
 				api.tree.reload()
 			end
 			vim.keymap.set("n", "ga", git_add, { desc = "[G]it [A]dd" })
+			-- TODO: reset file
 		end,
 	},
 
-	{ -- better statusline
+	{ -- Better statusline
 		"nvim-lualine/lualine.nvim",
 		opts = {
 			options = {
+				theme = "base16",
 				section_separators = "",
 				component_separators = "",
 				globalstatus = true,
@@ -192,14 +224,18 @@ require("lazy").setup({
 		},
 	},
 
-	{
-		"nvim-telescope/telescope-fzf-native.nvim",
-		build = "make",
-	},
-	{ -- quick search/actions
+	-- TODO: use folke/noice.nvim
+
+	{ -- Quick search/actions
 		"nvim-telescope/telescope.nvim",
 		tag = "0.1.8",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			{
+				"nvim-telescope/telescope-fzf-native.nvim",
+				build = "make",
+			},
+		},
 		opts = {
 			extensions = {
 				fzf = {
@@ -222,7 +258,7 @@ require("lazy").setup({
 		end,
 	},
 
-	{ -- formater
+	{ -- Formaters
 		"stevearc/conform.nvim",
 		opts = {
 			formatters_by_ft = {
@@ -230,13 +266,41 @@ require("lazy").setup({
 				sh = { "shfmt" },
 				zsh = { "shfmt" },
 				typescript = { "biome", "eslint", "prettier" },
+				typescriptreact = { "biome", "eslint", "prettier" },
 				javascript = { "biome", "eslint", "prettier" },
+				javascriptreact = { "biome", "eslint", "prettier" },
 			},
 			format_on_save = {
+				async = false,
 				timeout_ms = 500,
 				lsp_fallback = true,
 			},
 		},
+	},
+
+	{ -- Linters integration
+		"mfussenegger/nvim-lint",
+		event = {
+			"BufReadPre",
+			"BufNewFile",
+		},
+		config = function()
+			local lint = require("lint")
+
+			lint.linters_by_ft = {
+				dockerfile = { "hadolint" },
+				sh = { "shellcheck" },
+				zsh = { "shellcheck" },
+			}
+
+			local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
+			vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+				group = lint_augroup,
+				callback = function()
+					lint.try_lint()
+				end,
+			})
+		end,
 	},
 
 	-- LSP setup
@@ -248,7 +312,7 @@ require("lazy").setup({
 			lsp_zero.extend_lspconfig()
 			lsp_zero.set_sign_icons({
 				error = "",
-				warn = "",
+				warn = "",
 				hint = "",
 				info = "",
 			})
@@ -276,7 +340,7 @@ require("lazy").setup({
 					function(server_name)
 						lsp_config[server_name].setup({})
 					end,
-					-- add typings for 'vim' global variable
+					-- Override lua_ls, add typings for 'vim' global variable
 					lua_ls = function()
 						local lua_opts = lsp_zero.nvim_lua_ls()
 						lsp_config.lua_ls.setup(lua_opts)
