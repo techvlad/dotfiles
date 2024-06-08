@@ -4,24 +4,25 @@ eval "$(zoxide init zsh)"
 # Add fancy zsh prompt
 eval "$(starship init zsh)"
 
-# FZF Tomorrow Night Bight
+# FZF Gruvbox dark medium
+# https://github.com/tinted-theming/tinted-fzf/blob/main/bash/base16-gruvbox-dark-medium.config
 _gen_fzf_default_opts() {
-	local color00='#000000'
-	local color01='#282a2e'
-	local color02='#373b41'
-	local color03='#969896'
-	local color04='#b4b7b4'
-	local color05='#c5c8c6'
-	local color06='#e0e0e0'
-	local color07='#ffffff'
-	local color08='#cc6666'
-	local color09='#de935f'
-	local color0A='#f0c674'
-	local color0B='#b5bd68'
-	local color0C='#8abeb7'
-	local color0D='#81a2be'
-	local color0E='#b294bb'
-	local color0F='#a3685a'
+	local color00='#282828'
+	local color01='#3c3836'
+	local color02='#504945'
+	local color03='#665c54'
+	local color04='#bdae93'
+	local color05='#d5c4a1'
+	local color06='#ebdbb2'
+	local color07='#fbf1c7'
+	local color08='#fb4934'
+	local color09='#fe8019'
+	local color0A='#fabd2f'
+	local color0B='#b8bb26'
+	local color0C='#8ec07c'
+	local color0D='#83a598'
+	local color0E='#d3869b'
+	local color0F='#d65d0e'
 
 	export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS""\
  --color=bg+:$color01,bg:$color00,spinner:$color0C,hl:$color0D""\
@@ -40,7 +41,7 @@ alias du='dust'
 alias df='duf'
 # alias find='fd'
 # alias grep='rg'
-alias cat='bat -pp --theme=ansi'
+alias cat='bat -pp --theme=gruvbox-dark'
 alias vim='nvim'
 alias v='nvim'
 
@@ -64,18 +65,12 @@ alias wanip="curl http://ipecho.net/plain; echo"
 # check internet access
 alias internet_healthcheck="ping 1.1.1.1"
 
+# Upgrade Linux or MacOS
+alias upgrade_system='brew update && brew upgrade --no-quarantine --greedy'
+
 # Make port free
 killport() {
 	lsof -ti:"$1" | xargs kill -9
-}
-
-# Upgrade Linux or MacOS
-upgrade_system() {
-	if [[ "$(uname)" == "Linux" ]]; then
-		yay -Syu --nocleanmenu --nodiffmenu --noconfirm
-	else
-		brew update && brew upgrade --no-quarantine --greedy
-	fi
 }
 
 colortest() {
@@ -149,17 +144,6 @@ function extract {
 	done
 }
 
-# pnpm
-export PNPM_HOME="/Users/vlad/Library/pnpm"
-case ":$PATH:" in
-*":$PNPM_HOME:"*) ;;
-*) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
-# bun completions
-[ -s "/Users/vlad/.bun/_bun" ] && source "/Users/vlad/.bun/_bun"
-
 # Setup default editor
 export EDITOR="nvim"
 
@@ -168,9 +152,22 @@ export DISABLE_OPENCOLLECTIVE=1
 export OPEN_SOURCE_CONTRIBUTOR=1
 export ADBLOCK=1
 
+# Enforce English as primary lang
+export LC_ALL=en_US.UTF-8
+
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Enforce English as primary llang
-export LC_ALL=en_US.UTF-8
+# bun completions
+[ -s "/Users/vlad/.bun/_bun" ] && source "/Users/vlad/.bun/_bun"
+
+# pnpm
+export PNPM_HOME="/Users/vlad/Library/pnpm"
+case ":$PATH:" in
+*":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# vim: ts=4 sts=4 sw=4 et

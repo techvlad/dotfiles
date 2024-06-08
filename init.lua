@@ -94,24 +94,7 @@ require("lazy").setup({
 	{ -- Collection of colorschemes
 		"RRethy/base16-nvim",
 		config = function()
-			require("base16-colorscheme").setup({
-				base00 = "#000000",
-				base01 = "#282a2e",
-				base02 = "#373b41",
-				base03 = "#969896",
-				base04 = "#b4b7b4",
-				base05 = "#c5c8c6",
-				base06 = "#e0e0e0",
-				base07 = "#ffffff",
-				base08 = "#cc6666",
-				base09 = "#de935f",
-				base0A = "#f0c674",
-				base0B = "#b5bd68",
-				base0C = "#8abeb7",
-				base0D = "#81a2be",
-				base0E = "#b294bb",
-				base0F = "#a3685a",
-			})
+			vim.cmd.colorscheme("base16-gruvbox-dark-medium")
 		end,
 	},
 
@@ -126,7 +109,7 @@ require("lazy").setup({
 	},
 
 	{
-		-- Highlight todo, notes, etc in comments
+		-- Highlight todo, note, fixme, etc in comments
 		"folke/todo-comments.nvim",
 		event = "VimEnter",
 		dependencies = { "nvim-lua/plenary.nvim" },
@@ -200,7 +183,7 @@ require("lazy").setup({
 		"nvim-lualine/lualine.nvim",
 		opts = {
 			options = {
-				theme = "base16",
+				theme = "gruvbox",
 				section_separators = "",
 				component_separators = "",
 				globalstatus = true,
@@ -258,47 +241,39 @@ require("lazy").setup({
 		end,
 	},
 
-	{ -- Formaters
-		"stevearc/conform.nvim",
-		opts = {
-			formatters_by_ft = {
-				lua = { "stylua" },
-				sh = { "shfmt" },
-				zsh = { "shfmt" },
-				typescript = { "biome", "eslint", "prettier" },
-				typescriptreact = { "biome", "eslint", "prettier" },
-				javascript = { "biome", "eslint", "prettier" },
-				javascriptreact = { "biome", "eslint", "prettier" },
-			},
-			format_on_save = {
-				async = false,
-				timeout_ms = 500,
-				lsp_fallback = true,
-			},
-		},
-	},
-
-	{ -- Linters integration
-		"mfussenegger/nvim-lint",
-		event = {
-			"BufReadPre",
-			"BufNewFile",
+	{
+		"nvimtools/none-ls.nvim",
+		dependencies = {
+			"nvimtools/none-ls-extras.nvim",
+			"gbprod/none-ls-shellcheck.nvim",
 		},
 		config = function()
-			local lint = require("lint")
+			local null_ls = require("null-ls")
 
-			lint.linters_by_ft = {
-				dockerfile = { "hadolint" },
-				sh = { "shellcheck" },
-				zsh = { "shellcheck" },
-			}
-
-			local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
-			vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
-				group = lint_augroup,
-				callback = function()
-					lint.try_lint()
-				end,
+			null_ls.setup({
+				sources = {
+					-- general
+					null_ls.builtins.completion.spell,
+					-- lua/nvim
+					null_ls.builtins.formatting.stylua,
+					-- github actions lint (yaml)
+					null_ls.builtins.diagnostics.actionlint,
+					-- sh/bash/zsh
+					null_ls.builtins.formatting.shfmt.with({
+						filetypes = { "sh", "zsh" },
+					}),
+					null_ls.builtins.diagnostics.zsh,
+					require("none-ls-shellcheck.diagnostics").with({
+						filetypes = { "sh", "zsh" },
+					}),
+					require("none-ls-shellcheck.code_actions").with({
+						filetypes = { "sh", "zsh" },
+					}),
+					-- docker file
+					null_ls.builtins.diagnostics.hadolint,
+					-- js/ts
+					null_ls.builtins.formatting.biome.with({ prefer_local = true }),
+				},
 			})
 		end,
 	},
@@ -316,12 +291,26 @@ require("lazy").setup({
 				hint = "",
 				info = "",
 			})
-			lsp_zero.on_attach(function(_, bufnr)
+			local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+			lsp_zero.on_attach(function(client, bufnr)
 				lsp_zero.default_keymaps({ buffer = bufnr })
+
 				local telescope = require("telescope.builtin")
 				vim.keymap.set("n", "gr", telescope.lsp_references, { buffer = bufnr })
 				vim.keymap.set("n", "gi", telescope.lsp_implementations, { buffer = bufnr })
 				vim.keymap.set("n", "go", telescope.lsp_type_definitions, { buffer = bufnr })
+
+				-- https://github.com/nvimtools/none-ls.nvim/wiki/Formatting-on-save
+				if client.supports_method("textDocument/formatting") then
+					vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+					vim.api.nvim_create_autocmd("BufWritePre", {
+						group = augroup,
+						buffer = bufnr,
+						callback = function()
+							vim.lsp.buf.format({ async = false })
+						end,
+					})
+				end
 			end)
 		end,
 	},
@@ -336,6 +325,13 @@ require("lazy").setup({
 
 			local lsp_zero = require("lsp-zero")
 			require("mason-lspconfig").setup({
+				ensure_installed = {
+					"eslint",
+					"jsonls",
+					"lua_ls",
+					"tsserver",
+					"yamlls",
+				},
 				handlers = {
 					function(server_name)
 						lsp_config[server_name].setup({})
@@ -348,6 +344,16 @@ require("lazy").setup({
 				},
 			})
 		end,
+	},
+	{ -- NOTE: install additional tooling via Mason
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
+		opts = {
+			ensure_installed = {
+				"hadolint",
+				"stylua",
+				"shfmt",
+			},
+		},
 	},
 	{ "neovim/nvim-lspconfig" },
 	{ "hrsh7th/cmp-nvim-lsp" },
