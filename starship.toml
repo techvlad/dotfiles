@@ -8,7 +8,7 @@ show_milliseconds = true
 # From Nerd Font Symbols Preset https://starship.rs/presets/nerd-font.html#nerd-font-symbols-preset
 
 [aws]
-symbol = "  "
+symbol = " "
 
 [buf]
 symbol = " "
